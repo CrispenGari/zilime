@@ -1,0 +1,131 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Error {
+  field: String!
+  message: String!
+}
+
+input FeaturesInput {
+  K: Float!
+  P: Float!
+  N: Float!
+  humidity: Float!
+  temperature: Float!
+  ph: Float!
+  rainfall: Float
+}
+input RecommendCropInput {
+  features: FeaturesInput!
+  top: Int
+}
+
+type Meta {
+  main: String!
+  description: String!
+  language: String!
+  libraries: [String!]!
+}
+
+type Prediction {
+  crop: String!
+  label: Int!
+  probability: Float!
+}
+type Predictions {
+  predictions: [Prediction!]!
+  top: Prediction!
+}
+type PredictionResponse {
+  error: Error
+  success: Boolean!
+  predictions: Predictions
+}
+
+type WeatherData {
+  request: Request
+  location: Location
+  current: Current
+}
+
+type Request {
+  type: String
+  query: String
+  language: String
+  unit: String
+}
+
+type Location {
+  name: String
+  country: String
+  region: String
+  lat: String
+  lon: String
+  timezone_id: String
+  localtime: String
+  localtime_epoch: Int
+  utc_offset: String
+}
+
+type Current {
+  observation_time: String
+  temperature: Int
+  weather_code: Int
+  weather_icons: [String]
+  weather_descriptions: [String]
+  astro: Astro
+  air_quality: AirQuality
+  wind_speed: Int
+  wind_degree: Int
+  wind_dir: String
+  pressure: Int
+  precip: Float
+  humidity: Int
+  cloudcover: Int
+  feelslike: Int
+  uv_index: Int
+  visibility: Int
+  is_day: String
+}
+
+type Astro {
+  sunrise: String
+  sunset: String
+  moonrise: String
+  moonset: String
+  moon_phase: String
+  moon_illumination: Int
+}
+
+type AirQuality {
+  co: Float
+  no2: Float
+  o3: Float
+  so2: Float
+  pm2_5: Float
+  pm10: Float
+  us_epa_index: Int
+  gb_defra_index: Int
+}
+
+type WeatherDataResponse {
+  error: Error
+  weather: WeatherData
+  success: Boolean!
+}
+
+input WeatherInput {
+  lat: Float!
+  lon: Float!
+}
+
+type Query {
+  meta: Meta!
+  weather(input: WeatherInput!): WeatherDataResponse!
+}
+
+type Mutation {
+  recommendCrop(input: RecommendCropInput!): PredictionResponse!
+}
